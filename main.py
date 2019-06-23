@@ -220,11 +220,15 @@ class VBox(object):
         vms = []
 
         for line in out.splitlines():
-            m = re.search(r'"([a-zA-Z0-9-_]+)"', line)
-            if m:
-                name = m.group(1)
+            m = re.findall(r'([a-zA-Z0-9-_]+)', line)
+            # Set the name and state of the vm. 
+            if m[0] != "inaccessible":
+                name = m[0]  # m.group(1)
                 state = self.state(name)
-                vms.append((state, name))
+            else:
+                name = m[1]
+                state = "inaccessible"  # self.state(name)
+            vms.append((state, name))
 
         return vms
 
